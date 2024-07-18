@@ -1,0 +1,25 @@
+spin_manifest_version = 2
+
+[application]
+name = "redis-rust"
+version = "0.1.0"
+authors = ["Michelle Dhanani <michelle@fermyon.com>"]
+description = ""
+
+[application.trigger.redis]
+address = "redis://default:{{redis_password}}@{{redis_host}}:13480"
+
+[variables]
+redis_password = { required = true }
+redis_host = { required = true }
+
+[[trigger.redis]]
+channel = "hello"
+component = "redis-rust"
+
+[component.redis-rust]
+source = "target/wasm32-wasi/release/redis_rust.wasm"
+allowed_outbound_hosts = []
+[component.redis-rust.build]
+command = "cargo build --target wasm32-wasi --release"
+watch = ["src/**/*.rs", "Cargo.toml"]
